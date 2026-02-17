@@ -5,12 +5,14 @@ import Dashboard from './components/Dashboard';
 import Library from './components/Library';
 import Recorder from './components/Recorder';
 import Auth from './components/Auth';
+import Intro from './components/Intro';
 import { DashboardIcon, RecordIcon, LibraryIcon } from './components/Icons';
 import * as db from './services/db';
 import { supabase } from './services/supabase';
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any>(null);
+  const [hasSeenIntro, setHasSeenIntro] = useState(false);
   const [activeTab, setActiveTab] = useState<AppTab>('dashboard');
   const [logs, setLogs] = useState<DayLogEntry[]>([]);
   const [activeRecordingType, setActiveRecordingType] = useState<LogType | null>(null);
@@ -81,6 +83,7 @@ const App: React.FC = () => {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    setHasSeenIntro(false);
   };
 
   if (isLoading) {
@@ -91,6 +94,12 @@ const App: React.FC = () => {
     );
   }
 
+  // Se não estiver logado e não viu a intro ainda
+  if (!session && !hasSeenIntro) {
+    return <Intro onNext={() => setHasSeenIntro(true)} />;
+  }
+
+  // Se não estiver logado mas já passou pela intro
   if (!session) {
     return <Auth />;
   }
@@ -102,25 +111,25 @@ const App: React.FC = () => {
       {isUploading && (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4 animate-in fade-in duration-300">
            <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-           <p className="font-bold text-white">Saving to Cloud...</p>
+           <p className="font-bold text-white">Salvando reflexão...</p>
         </div>
       )}
 
       {/* Content */}
       <main className="max-w-md mx-auto relative min-h-screen">
         <div className="absolute top-6 right-6 z-10">
-            <button onClick={handleSignOut} className="apple-glass text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full text-zinc-500 uppercase">Sign Out</button>
+            <button onClick={handleSignOut} className="apple-glass text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full text-zinc-500 uppercase">Sair</button>
         </div>
 
         {activeTab === 'dashboard' && <Dashboard logs={logs} onQuickRecord={handleQuickRecord} />}
         {activeTab === 'library' && <Library logs={logs} onDelete={handleDeleteLog} />}
         {activeTab === 'record' && !activeRecordingType && (
             <div className="p-6 pt-32 flex flex-col gap-6 h-screen justify-center text-center">
-                <h1 className="text-3xl font-bold">New Log</h1>
-                <p className="text-zinc-500">Choose your current session</p>
+                <h1 className="text-3xl font-bold text-white">Nova Reflexão</h1>
+                <p className="text-zinc-500">Escolha seu momento</p>
                 <div className="flex flex-col gap-4">
-                    <button onClick={() => setActiveRecordingType('morning')} className="h-20 bg-white text-black rounded-3xl font-bold text-xl active:scale-95 transition-transform">Morning Routine</button>
-                    <button onClick={() => setActiveRecordingType('night')} className="h-20 apple-glass rounded-3xl font-bold text-xl active:scale-95 transition-transform">Evening Reflection</button>
+                    <button onClick={() => setActiveRecordingType('morning')} className="h-20 bg-white text-black rounded-3xl font-bold text-xl active:scale-95 transition-transform">Rotina Matinal</button>
+                    <button onClick={() => setActiveRecordingType('night')} className="h-20 apple-glass rounded-3xl font-bold text-xl active:scale-95 transition-transform">Reflexão da Noite</button>
                 </div>
             </div>
         )}
@@ -134,7 +143,7 @@ const App: React.FC = () => {
             className="flex flex-col items-center gap-1 flex-1 py-2 active:scale-90 transition-transform"
           >
             <DashboardIcon active={activeTab === 'dashboard'} />
-            <span className={`text-[10px] font-bold ${activeTab === 'dashboard' ? 'text-white' : 'text-zinc-500'}`}>DASHBOARD</span>
+            <span className={`text-[10px] font-bold ${activeTab === 'dashboard' ? 'text-white' : 'text-zinc-500'}`}>INÍCIO</span>
           </button>
           
           <button 
@@ -151,7 +160,7 @@ const App: React.FC = () => {
             className="flex flex-col items-center gap-1 flex-1 py-2 active:scale-90 transition-transform"
           >
             <LibraryIcon active={activeTab === 'library'} />
-            <span className={`text-[10px] font-bold ${activeTab === 'library' ? 'text-white' : 'text-zinc-500'}`}>TIMELINE</span>
+            <span className={`text-[10px] font-bold ${activeTab === 'library' ? 'text-white' : 'text-zinc-500'}`}>HISTÓRICO</span>
           </button>
         </div>
       </nav>

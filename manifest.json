@@ -1,8 +1,8 @@
 
 {
-  "name": "DayLog Journal",
-  "short_name": "DayLog",
-  "description": "Seu diário diário em vídeo com estética Apple.",
+  "name": "Reflexo",
+  "short_name": "Reflexo",
+  "description": "Mude o reflexo mudando a si mesmo.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
@@ -10,10 +10,15 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3652/3652191.png",
+      "src": "/logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ]
 }
