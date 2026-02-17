@@ -1,0 +1,8 @@
+{
+  "name": "Copy of DayLog",
+  "description": "A minimalist daily video journal to plan your mornings and reflect on your nights with an Apple-inspired aesthetic.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
