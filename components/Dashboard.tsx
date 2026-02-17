@@ -19,10 +19,11 @@ const Dashboard: React.FC<DashboardProps> = ({ logs, onQuickRecord }) => {
       return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     });
 
+    // Simple streak calculation (mocked for demo simplicity, could be complex)
     const uniqueDays = new Set(logs.map(l => l.dateStr)).size;
     
     return {
-      streak: uniqueDays,
+      streak: uniqueDays, // In a real app, calculate consecutive days
       totalVideosThisMonth: logsInMonth.length
     };
   }, [logs]);
@@ -48,18 +49,18 @@ const Dashboard: React.FC<DashboardProps> = ({ logs, onQuickRecord }) => {
   return (
     <div className="flex flex-col gap-8 pb-32 animate-in fade-in duration-500">
       <header className="px-6 pt-12">
-        <h1 className="text-4xl font-bold tracking-tight text-white">Reflexo</h1>
-        <p className="text-zinc-500 mt-1 font-medium">Sua história, arquivada diariamente.</p>
+        <h1 className="text-4xl font-bold tracking-tight">DayLog</h1>
+        <p className="text-zinc-500 mt-1 font-medium">Your life, archived daily.</p>
       </header>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-4 px-6">
-        <div className="apple-glass rounded-3xl p-5 flex flex-col justify-between h-32 border-white/5">
+        <div className="apple-glass rounded-3xl p-5 flex flex-col justify-between h-32">
           <span className="text-zinc-400 text-sm font-semibold uppercase tracking-wider">Streak</span>
-          <span className="text-4xl font-bold">{stats.streak} <span className="text-lg font-medium text-zinc-500">dias</span></span>
+          <span className="text-4xl font-bold">{stats.streak} <span className="text-lg font-medium text-zinc-500">days</span></span>
         </div>
-        <div className="apple-glass rounded-3xl p-5 flex flex-col justify-between h-32 border-white/5">
-          <span className="text-zinc-400 text-sm font-semibold uppercase tracking-wider">No Mês</span>
+        <div className="apple-glass rounded-3xl p-5 flex flex-col justify-between h-32">
+          <span className="text-zinc-400 text-sm font-semibold uppercase tracking-wider">This Month</span>
           <span className="text-4xl font-bold">{stats.totalVideosThisMonth} <span className="text-lg font-medium text-zinc-500">logs</span></span>
         </div>
       </div>
@@ -71,35 +72,35 @@ const Dashboard: React.FC<DashboardProps> = ({ logs, onQuickRecord }) => {
           className="flex-1 bg-white text-black h-14 rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"
         >
           <SunIcon />
-          Manhã
+          Morning
         </button>
         <button 
           onClick={() => onQuickRecord('night')}
-          className="flex-1 apple-glass text-white h-14 rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform border-white/5"
+          className="flex-1 apple-glass text-white h-14 rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform"
         >
           <MoonIcon />
-          Noite
+          Night
         </button>
       </div>
 
       {/* Calendar */}
       <div className="px-6">
-        <div className="apple-glass rounded-3xl p-6 border-white/5">
+        <div className="apple-glass rounded-3xl p-6">
           <div className="flex justify-between items-center mb-6">
-             <h3 className="font-bold text-lg text-white">{new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}</h3>
+             <h3 className="font-bold text-lg">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</h3>
           </div>
           <div className="grid grid-cols-7 gap-y-4 text-center">
-            {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map(d => (
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => (
               <span key={d} className="text-xs font-bold text-zinc-600">{d}</span>
             ))}
             {calendarDays.map(d => (
               <div key={d.dateStr} className="flex flex-col items-center gap-1.5 py-1">
-                <span className={`text-sm font-medium h-8 w-8 flex items-center justify-center rounded-full ${d.isToday ? 'bg-white text-black font-bold' : 'text-zinc-300'}`}>
+                <span className={`text-sm font-medium h-8 w-8 flex items-center justify-center rounded-full ${d.isToday ? 'bg-zinc-800 text-white' : 'text-zinc-300'}`}>
                   {d.day}
                 </span>
                 <div className="flex gap-1 h-1.5">
-                  {d.hasMorning && <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-[0_0_5px_rgba(250,204,21,0.4)]" />}
-                  {d.hasNight && <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_5px_rgba(129,140,248,0.4)]" />}
+                  {d.hasMorning && <div className="w-1.5 h-1.5 rounded-full bg-yellow-400" />}
+                  {d.hasNight && <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />}
                 </div>
               </div>
             ))}
